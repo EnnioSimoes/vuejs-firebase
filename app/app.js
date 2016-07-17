@@ -6,6 +6,7 @@ var config = {
   storageBucket: "vuejs-firebase-4aeb4.appspot.com",
 };
 var firebaseApp = firebase.initializeApp(config);
+var db = firebaseApp.database();
 
 var chatComponent = Vue.extend({
     template: `
@@ -85,7 +86,7 @@ var chatComponent = Vue.extend({
                 </div>
                 <div class="panel-body">
                     <ul class="chat">
-                        <li class="clearfix" v-bind:class="{ left: !isUser(o.email), right: isUser(o.email) }" v-for="o in chat.messages">
+                        <li class="clearfix" v-bind:class="{ left: !isUser(o.email), right: isUser(o.email) }" v-for="o in messages">
                             <span class="chat-img" v-bind:class="{ 'pull-left': !isUser(o.email), 'pull-right': isUser(o.email) }">
                                 <img src="{{ o.photo }}" alt="User Avatar" class="img-circle" />
                             </span>
@@ -97,7 +98,7 @@ var chatComponent = Vue.extend({
                                         12 mins ago
                                     </small>
                                 </div>
-                                <p>
+                                <p v-bind:class="{ 'pull-left': !isUser(o.email), 'pull-right': isUser(o.email) }">
                                     {{ o.text }}
                                 </p>
                             </div>
@@ -106,47 +107,58 @@ var chatComponent = Vue.extend({
                 </div>
                 <div class="panel-footer">
                     <div class="input-group">
-                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Digite sua mensagem" v-model="message" @keyup.enter="sendMessage" />
                         <span class="input-group-btn">
-                            <button class="btn btn-warning btn-sm" id="btn-chat">
-                                Send</button>
+                            <button class="btn btn-warning btn-sm" id="btn-chat" @click="sendMessage">Send</button>
                         </span>
                     </div>
                 </div>
             </div>
     `,
+    created: function() {
+        var roomRef = 'chat/rooms/' + this.$route.params.room;
+        this.$bindAsArray('messages', db.ref(roomRef + '/messages'));
+        this.$set('user.photo', 'http://www.gravatar.com/avatar/'+md5(this.user.email) + '.jpg');
+    },
     data: function()  {
         return {
             user: {
                 name: 'Ennio',
                 email: 'ennio.simoes@outlook.com'
             },
-            chat: {
-                messages: [
-                    {
-                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.',
-                        name: 'Ennio',
-                        email: 'ennio.simoes@outlook.com',
-                        photo: 'http://placehold.it/50/FA6F57/fff&text=ME'
-                    },
-                    {
-                        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.',
-                        name: 'Greicy',
-                        email: 'greicy.simoes@outlook.com',
-                        photo: 'http://placehold.it/50/55C1E7/fff&text=U'
-                    }
-                ]
-            }
+            message: ''
+            // chat: {
+            //     messages: [
+            //         {
+            //             text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.',
+            //             name: 'Ennio',
+            //             email: 'ennio.simoes@outlook.com',
+            //             photo: 'http://placehold.it/50/FA6F57/fff&text=ME'
+            //         },
+            //         {
+            //             text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales.',
+            //             name: 'Greicy',
+            //             email: 'greicy.simoes@outlook.com',
+            //             photo: 'http://placehold.it/50/55C1E7/fff&text=U'
+            //         }
+            //     ]
+            // }
         };
     },
     methods: {
         isUser: function(email) {
             return this.user.email == email;
+        },
+        sendMessage: function() {
+            this.$firebaseRefs.messages.push({
+                name: this.user.name,
+                email: this.user.email,
+                text: this.message,
+                photo: this.user.photo
+            });
         }
     }
 });
-
-var db = firebaseApp.database();
 
 var roomsComponent = Vue.extend({
     template: `
@@ -162,15 +174,9 @@ var roomsComponent = Vue.extend({
                 </div>
             </div>
         </div>
-        <input type="text" v-model="text" @keyup.enter="insertData"/>
-        <ul>
-            <li v-for="o in array">
-                {{ o.text }}
-            </li>
-        </ul>
     `,
     firebase: {
-        array: db.ref('array')
+        rooms: db.ref('chat/rooms')
     },
     data: function() {
         return {
@@ -187,11 +193,6 @@ var roomsComponent = Vue.extend({
     methods: {
         goToChat: function(room) {
             this.$route.router.go('/chat/'+room.id);
-        },
-        insertData: function() {
-            this.$firebaseRefs.array.push({
-                text: this.text
-            });
         }
     }
 });
