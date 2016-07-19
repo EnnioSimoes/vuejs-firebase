@@ -118,13 +118,13 @@ var chatComponent = Vue.extend({
     created: function() {
         var roomRef = 'chat/rooms/' + this.$route.params.room;
         this.$bindAsArray('messages', db.ref(roomRef + '/messages'));
-        this.$set('user.photo', 'http://www.gravatar.com/avatar/'+md5(this.user.email) + '.jpg');
     },
     data: function()  {
         return {
             user: {
-                name: 'Ennio',
-                email: 'ennio.simoes@outlook.com'
+                name: localStorage.getItem('name'),
+                email: localStorage.getItem('email'),
+                photo: localStorage.getItem('photo')
             },
             message: ''
         };
@@ -154,7 +154,7 @@ var roomsComponent = Vue.extend({
                 <div class="panel-body">
                     {{ o.description }}
                     <br>
-                    <a href="javascript:void(0)" @click="goToChat(o)">Entrar</a>
+                    <a href="javascript:void(0)" @click="openModal(o)">Entrar</a>
                 </div>
             </div>
         </div>
@@ -181,7 +181,7 @@ var roomsComponent = Vue.extend({
               </div>
             </div>
           </div>
-        </div>        
+        </div>
     `,
     firebase: {
         rooms: db.ref('chat/rooms')
@@ -195,12 +195,23 @@ var roomsComponent = Vue.extend({
                 {id: "004", name: "C++", description: "Só fera do C++"},
                 {id: "005", name: "Javascript", description: "Só fera do Javascript"},
                 {id: "006", name: "VueJs", description: "Só fera do VueJs"},
-            ]
+            ],
+            name: '',
+            email: '',
+            room: null
         };
     },
     methods: {
-        goToChat: function(room) {
-            this.$route.router.go('/chat/'+room.id);
+        login: function(room) {
+            localStorage.setItem('name', this.name);
+            localStorage.setItem('email', this.email);
+            localStorage.setItem('photo', 'http://www.gravatar.com/avatar/'+md5(this.email) + '.jpg');
+            $('#modalLoginEmail').modal('hide');
+            this.$route.router.go('/chat/'+this.room.id);
+        },
+        openModal: function(room) {
+            this.room = room;
+            $('#modalLoginEmail').modal('show');
         }
     }
 });
