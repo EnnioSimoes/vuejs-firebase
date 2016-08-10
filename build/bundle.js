@@ -102,7 +102,13 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__.e/* require */(1, function(__webpack_require__) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [__webpack_require__(2), __webpack_require__(4)]; (function(Vue, VueRouter) {
+	__webpack_require__.e/* require */(1, function(__webpack_require__) { var __WEBPACK_AMD_REQUIRE_ARRAY__ = [
+	    __webpack_require__(2),
+	    __webpack_require__(5),
+	    __webpack_require__(6),
+	    __webpack_require__(11),
+	    __webpack_require__(26),
+	]; (function(Vue, VueRouter, RoomsCreateComponent, RoomsComponent, ChatComponent) {
 	    Vue.use(VueRouter);
 
 	    var appComponent = Vue.extend({});
@@ -111,13 +117,13 @@
 
 	    router.map({
 	        '/chat/:room': {
-	            component: __webpack_require__(5)
+	            component: ChatComponent
 	        },
 	        '/rooms': {
-	            component: __webpack_require__(10)
+	            component: RoomsComponent
 	        },
 	        '/rooms-create': {
-	            component: __webpack_require__(27)
+	            component: RoomsCreateComponent
 	        }
 	    });
 

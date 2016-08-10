@@ -1,7 +1,7 @@
 define(
     'rooms.component',
     [
-        'md5',
+        'blueimp-md5',
         'vue',
         'vuefire',
         './firebase-db',
@@ -81,5 +81,4 @@ define(
                 }
             }
         };
-    }
-);
+    });

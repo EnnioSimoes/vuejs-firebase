@@ -8,9 +8,9 @@ module.exports = {
         publicPath: '/build/'
     },
     plugins: [
-        new webpack.ProviderPlugin({
+        new webpack.ProvidePlugin({
             $: 'jquery',
-            jQuery: 'jquery',
+            jQuery: 'jquery'
         })
     ]
 };
