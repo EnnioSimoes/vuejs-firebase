@@ -1,3 +1,9 @@
+import Vue from 'vue';
+import VueFire from 'vuefire';
+import db from './firebase-db';
+
+Vue.use(VueFire);
+
 var rooms = [
     {id: "001", name: "PHP", description: "Só fera do PHP"},
     {id: "002", name: "Java", description: "Só fera do Java"},
@@ -7,13 +13,7 @@ var rooms = [
     {id: "006", name: "VueJs", description: "Só fera do VueJs"},
 ];
 
-var Vue = require('vue');
-var VueFire = require('vuefire');
-var db = require('./firebase-db');
-
-Vue.use(VueFire);
-
-module.exports = {
+export default {
     template: `
         <ul>
             <li v-for="o in rooms">
@@ -32,6 +32,6 @@ module.exports = {
                 name: room.name,
                 description: room.description
             });
-        });
+        })
     }
 };

@@ -1,27 +1,26 @@
-require([
-    'vue',
-    'vue-router',
-    './rooms-create.component',
-    './rooms.component',
-    './chat.component',
-], function(Vue, VueRouter, RoomsCreateComponent, RoomsComponent, ChatComponent) {
-    Vue.use(VueRouter);
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import ChatComponent from './chat.component';
+import RoomsComponent from './rooms.component';
+import RoomsCreateComponent from './rooms-create.component';
 
-    var appComponent = Vue.extend({});
 
-    var router = new VueRouter();
+Vue.use(VueRouter);
 
-    router.map({
-        '/chat/:room': {
-            component: ChatComponent
-        },
-        '/rooms': {
-            component: RoomsComponent
-        },
-        '/rooms-create': {
-            component: RoomsCreateComponent
-        }
-    });
+var appComponent = Vue.extend({});
 
-    router.start(appComponent, "#app");
+var router = new VueRouter();
+
+router.map({
+    '/chat/:room': {
+        component: ChatComponent
+    },
+    '/rooms': {
+        component: RoomsComponent
+    },
+    '/rooms-create': {
+        component: RoomsCreateComponent
+    }
 });
+
+router.start(appComponent, "#app");

@@ -1,4 +1,5 @@
-var Firebase = require('firebase');
+import Firebase from 'firebase';
+
 var firebaseApp = Firebase.initializeApp({
   apiKey: "AIzaSyDaWR8G1TMrDtGAQRHscbH833yV63TZzvg",
   authDomain: "vuejs-firebase-4aeb4.firebaseapp.com",
@@ -6,4 +7,4 @@ var firebaseApp = Firebase.initializeApp({
   storageBucket: "vuejs-firebase-4aeb4.appspot.com",
 });
 
-module.exports = firebaseApp.database();
+export default firebaseApp.database();
