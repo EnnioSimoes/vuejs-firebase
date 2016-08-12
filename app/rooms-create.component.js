@@ -14,13 +14,7 @@ var rooms = [
 ];
 
 export default {
-    template: `
-        <ul>
-            <li v-for="o in rooms">
-                {{ o.name }}
-            </li>
-        </ul>
-    `,
+    template: require('html!../templates/rooms-create.component.html'),
     firebase: {
         rooms: db.ref('chat/rooms')
     },
